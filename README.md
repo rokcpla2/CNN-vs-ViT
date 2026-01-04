@@ -42,14 +42,13 @@ python train_cnn.py --epochs 50 --batch_size 128 --ratio 0.1
 
 ## 5. Preliminary Results (Data Scale: 10%)
 
-We conducted the first experiment using only **10% (5,000 images)** of the CIFAR-10 training set to test the data efficiency of each model.
+We conducted the first experiment using only **10% (5,000 images)** of the CIFAR-10 training set.
 
 | Model | Platform | Test Accuracy | Training Time |
 | :--- | :--- | :--- | :--- |
 | **CNN (ResNet-18)** | Mac M3 (MPS) | **63.40%** | ~3.5 min |
-| **ViT (Tiny-Patch16)** | Colab (T4 GPU) | 45.96% | ~30.0 min |
+| **ViT (Tiny-Patch16)** | Colab (TPU v2) | 45.01% | ~11.4 min |
 
-### Analysis
-* **Performance Gap:** CNN outperformed ViT by **+17.44%** in the low-data regime.
-* **Interpretation:** This strongly supports the hypothesis that ViTs lack the *inductive bias* (locality, translation invariance) inherent in CNNs, making them difficult to train effectively with limited data (5k samples).
-* **Next Steps:** We will extend this experiment to **25%, 50%, and 100%** data scales to observe if ViT catches up with CNNs as data volume increases.
+### 🔍 Analysis
+* **Performance Gap:** CNN outperformed ViT by **+18.39%**.
+* **Interpretation:** Even with TPU acceleration, ViT struggles significantly with small data (5k samples), showing severe overfitting (Train 75% vs Test 45%) compared to CNN.
