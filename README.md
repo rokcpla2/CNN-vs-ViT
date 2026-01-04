@@ -25,7 +25,7 @@ To ensure a fair comparison, the following hyperparameters were strictly control
 
 ### Hardware-Specific Optimization
 * **CNN (Mac M3):** Optimized for **MPS (Metal Performance Shaders)** with `num_workers=0` to eliminate multiprocessing overhead on MacOS.
-* **ViT (Colab TPU):** Optimized for **TPU v2 (Tensor Processing Unit)** using `torch_xla` and `MpDeviceLoader` for massive parallel processing.
+* **ViT (Colab TPU):** Optimized for **TPU v5e1 (Tensor Processing Unit)** using `torch_xla` and `MpDeviceLoader` for massive parallel processing.
 
 ## 3. Tech Stack
 * **Framework:** PyTorch
