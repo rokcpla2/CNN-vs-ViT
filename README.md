@@ -66,3 +66,17 @@ We observed the performance changes as the data scale increased from **10% to 25
 
 > **Analysis:** > Both models improved significantly, but the **performance gap remains large (~16.7%)**. 
 > ViT's accuracy jumped by over 10%, yet it still lags behind CNN, confirming its high data dependency.
+>
+> <br>
+
+### 5.3. Data Scale: 50% (25,000 Images)
+* **Goal:** Verify if the gap narrows as ViT gets more data.
+
+| Model | Platform | Test Accuracy | Improvement (vs 25%) |
+| :--- | :--- | :--- | :--- |
+| **CNN (ResNet-18)** | Mac M3 (MPS) | **79.13%** | +7.12% |
+| **ViT (Tiny-Patch16)** | Colab (TPU v2) | 65.24% | +9.94% |
+
+> **Analysis:** > **The gap is closing!** (16.7% → 13.9%). 
+> ViT finally surpassed 60% accuracy, showing a steeper learning curve than CNN. 
+> However, severe overfitting persists (Train 94% vs Test 65%), indicating that 25k images are still insufficient for ViT to fully generalize without strong regularization.
