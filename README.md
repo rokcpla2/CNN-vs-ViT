@@ -5,7 +5,7 @@ This project investigates the performance gap between **Convolutional Neural Net
 
 We hypothesize that **"ViTs are more data-hungry than CNNs"** and aim to observe how the performance gap narrows or widens as the dataset size increases on CIFAR-10. 
 
-Additionally, this study adopts a **Hybrid Environment Strategy**, demonstrating how to optimize training pipelines for different hardware architectures: **Edge Devices (Mac M3/MPS) for efficient CNN training** vs. **Cloud GPUs (Colab T4/CUDA) for compute-intensive ViT training**.
+Additionally, this study adopts a **Hybrid Environment Strategy**, demonstrating how to optimize training pipelines for different hardware architectures: **Edge Devices (Mac M3/MPS) for efficient CNN training** vs. **Cloud Accelerators (Colab TPU v2) for high-throughput ViT training**.
 
 ## 2. Methodology
 
@@ -25,14 +25,14 @@ To ensure a fair comparison, the following hyperparameters were strictly control
 
 ### Hardware-Specific Optimization
 * **CNN (Mac M3):** Optimized for **MPS (Metal Performance Shaders)** with `num_workers=0` to eliminate multiprocessing overhead on MacOS.
-* **ViT (Colab T4):** Optimized for **CUDA** with `num_workers=2` to utilize parallel data prefetching (Resize operations) on Linux.
+* **ViT (Colab TPU):** Optimized for **TPU v2 (Tensor Processing Unit)** using `torch_xla` and `MpDeviceLoader` for massive parallel processing.
 
 ## 3. Tech Stack
 * **Framework:** PyTorch
-* **Library:** `timm` (PyTorch Image Models), `torchvision`
+* **Library:** `timm` (PyTorch Image Models), `torchvision`, `torch_xla`
 * **Environments (Hybrid Strategy):**
-    * 💻 **Local:** MacBook Air M3 (Apple Silicon MPS) - *Used for CNN*
-    * ☁️ **Cloud:** Google Colab (NVIDIA T4 GPU) - *Used for ViT*
+    *  **Local:** MacBook Air M3 (Apple Silicon MPS) - *Used for CNN*
+    *  **Cloud:** Google Colab (TPU v2) - *Used for ViT*
 
 ## 4. Usage
 ### Train CNN (Local Mac M3)
