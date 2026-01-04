@@ -1,4 +1,4 @@
-# CNN-vs-ViT: Data Scale Sensitivity Study 🚀
+# CNN-vs-ViT: Data Scale Sensitivity Study
 
 ## 1. Introduction
 This project investigates the performance gap between **Convolutional Neural Networks (CNNs)** and **Vision Transformers (ViTs)** under varying data regimes. 
@@ -9,11 +9,11 @@ Additionally, this study adopts a **Hybrid Environment Strategy**, demonstrating
 
 ## 2. Methodology
 
-### 🧠 Models
+### Models
 * **CNN:** ResNet-18 (He et al.) - Efficient inductive bias for small data.
 * **ViT:** Vision Transformer (`vit_tiny_patch16_224`) - Leveraging `timm` library.
 
-### 🧪 Experimental Design (Controlled Variables)
+### Experimental Design (Controlled Variables)
 To ensure a fair comparison, the following hyperparameters were strictly controlled across both environments:
 
 * **Dataset:** CIFAR-10
@@ -23,7 +23,7 @@ To ensure a fair comparison, the following hyperparameters were strictly control
 * **Optimizer:** AdamW (`lr=0.001`, `weight_decay=1e-4`)
 * **Seed:** Fixed to `42` for reproducibility
 
-### ⚙️ Hardware-Specific Optimization
+### Hardware-Specific Optimization
 * **CNN (Mac M3):** Optimized for **MPS (Metal Performance Shaders)** with `num_workers=0` to eliminate multiprocessing overhead on MacOS.
 * **ViT (Colab T4):** Optimized for **CUDA** with `num_workers=2` to utilize parallel data prefetching (Resize operations) on Linux.
 
