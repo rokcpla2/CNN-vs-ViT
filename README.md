@@ -40,15 +40,29 @@ To ensure a fair comparison, the following hyperparameters were strictly control
 python train_cnn.py --epochs 50 --batch_size 128 --ratio 0.1
 ```
 
-## 5. Preliminary Results (Data Scale: 10%)
+## 5. Experiment Results 📊
 
-We conducted the first experiment using only **10% (5,000 images)** of the CIFAR-10 training set.
+We observed the performance changes as the data scale increased from **10% to 25%**.
+
+### 5.1. Data Scale: 10% (5,000 Images)
+* **Goal:** Test performance in an extremely low-data regime.
 
 | Model | Platform | Test Accuracy | Training Time |
 | :--- | :--- | :--- | :--- |
 | **CNN (ResNet-18)** | Mac M3 (MPS) | **63.40%** | ~3.5 min |
 | **ViT (Tiny-Patch16)** | Colab (TPU v2) | 45.01% | ~11.4 min |
 
-### 🔍 Analysis
-* **Performance Gap:** CNN outperformed ViT by **+18.39%**.
-* **Interpretation:** Even with TPU acceleration, ViT struggles significantly with small data (5k samples), showing severe overfitting (Train 75% vs Test 45%) compared to CNN.
+> **Analysis:** > CNN outperformed ViT by **+18.39%**. ViT failed to generalize, showing severe overfitting (Train 75% vs Test 45%).
+
+<br>
+
+### 5.2. Data Scale: 25% (12,500 Images)
+* **Goal:** Observe if ViT starts to catch up with 2.5x more data.
+
+| Model | Platform | Test Accuracy | Improvement (vs 10%) |
+| :--- | :--- | :--- | :--- |
+| **CNN (ResNet-18)** | Mac M3 (MPS) | **72.01%** | +8.61% |
+| **ViT (Tiny-Patch16)** | Colab (TPU v2) | 55.30% | +10.29% |
+
+> **Analysis:** > Both models improved significantly, but the **performance gap remains large (~16.7%)**. 
+> ViT's accuracy jumped by over 10%, yet it still lags behind CNN, confirming its high data dependency.
