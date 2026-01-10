@@ -71,7 +71,7 @@ CNN-vs-ViT/
 ### 4.1 Installation
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/CNN-vs-ViT.git
+git clone https://github.com/rokcpla2/CNN-vs-ViT.git
 cd CNN-vs-ViT
 pip install -r requirements.txt
 ```
@@ -103,7 +103,9 @@ python train_vit.py --ratio 0.25 --epochs 50
 
 ### 5.1 Performance Comparison Graph
 
-<img width="845" height="573" alt="download" src="https://github.com/user-attachments/assets/18137eea-70eb-4908-92b0-5c636110ddbb" />
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/18137eea-70eb-4908-92b0-5c636110ddbb" width="845" height="573" alt="final_result_dark">
+</p>
 
 The graph below illustrates the Test Accuracy trends as the dataset size increases.
 
