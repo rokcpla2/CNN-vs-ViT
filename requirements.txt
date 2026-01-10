@@ -1,0 +1,7 @@
+torch>=2.0.0
+torchvision>=0.15.0
+timm>=0.9.0
+numpy
+matplotlib
+tqdm
+# Note: torch_xla is required only for TPU environments (Google Colab)
