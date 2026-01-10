@@ -103,6 +103,8 @@ python train_vit.py --ratio 0.25 --epochs 50
 
 ### 5.1 Performance Comparison Graph
 
+<img width="845" height="573" alt="download" src="https://github.com/user-attachments/assets/18137eea-70eb-4908-92b0-5c636110ddbb" />
+
 The graph below illustrates the Test Accuracy trends as the dataset size increases.
 
 ### 5.2 Numerical Analysis
