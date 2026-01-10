@@ -1,82 +1,103 @@
-# CNN-vs-ViT: Data Scale Sensitivity Study
+# Comparative Analysis of Inductive Bias and Data Efficiency: CNN vs. Vision Transformer
+
+[![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=flat-square&logo=pytorch&logoColor=white)](https://pytorch.org/)
+[![Colab](https://img.shields.io/badge/Google_Colab-F9AB00?style=flat-square&logo=googlecolab&logoColor=white)](https://colab.research.google.com/)
+[![Apple Silicon](https://img.shields.io/badge/Apple_Silicon-MPS-000000?style=flat-square&logo=apple&logoColor=white)]()
+
+## 📝 Abstract
+This study investigates the impact of **Data Scale** on the performance of **Convolutional Neural Networks (CNNs)** and **Vision Transformers (ViTs)**. We empirically verify the hypothesis that ViTs lack the inductive bias inherent in CNNs, making them more "data-hungry" and difficult to generalize in low-data regimes.
+
+By scaling the CIFAR-10 training dataset from **10% to 100%**, we analyze the convergence speed, generalization capability, and overfitting tendencies of both architectures. Additionally, this project proposes a **Hybrid Computing Strategy**, utilizing **Apple Silicon (MPS)** for efficient edge-based CNN training and **Cloud TPU (v2/v5e)** for high-throughput ViT training.
+
+---
 
 ## 1. Introduction
-This project investigates the performance gap between **Convolutional Neural Networks (CNNs)** and **Vision Transformers (ViTs)** under varying data regimes. 
 
-We hypothesize that **"ViTs are more data-hungry than CNNs"** and aim to observe how the performance gap narrows or widens as the dataset size increases on CIFAR-10. 
+### 1.1. Motivation
+In the field of Computer Vision, the paradigm is shifting from CNNs to Transformers. However, deploying ViTs in real-world scenarios typically requires massive datasets (e.g., JFT-300M, ImageNet). This project aims to quantify the **performance gap** between a standard CNN (ResNet) and a lightweight ViT under restricted data environments, providing insights for efficient model selection in data-scarce applications.
 
-Additionally, this study adopts a **Hybrid Environment Strategy**, demonstrating how to optimize training pipelines for different hardware architectures: **Edge Devices (Mac M3/MPS) for efficient CNN training** vs. **Cloud Accelerators (Colab TPU v5e-1) for high-throughput ViT training**.
+### 1.2. Key Contributions
+* **Data Sensitivity Analysis:** Quantitative comparison of model performance across four data scales (10%, 25%, 50%, 100%).
+* **Hybrid Training Pipeline:** Demonstration of a heterogeneous computing environment optimizing resource allocation (Edge Device vs. Cloud Accelerator).
+* **Verification of Inductive Bias:** Empirical evidence supporting the necessity of locality and translation invariance in low-data regimes.
 
-## 2. Methodology
+---
 
-### Models
-* **CNN:** ResNet-18 (He et al.) - Efficient inductive bias for small data.
-* **ViT:** Vision Transformer (`vit_tiny_patch16_224`) - Leveraging `timm` library.
+## 2. Experimental Methodology
 
-### Experimental Design (Controlled Variables)
-To ensure a fair comparison, the following hyperparameters were strictly controlled across both environments:
+### 2.1. Model Architectures
+We compared two representative models with similar parameter scales:
+* **CNN:** `ResNet-18` (He et al.)
+    * *Characteristics:* Strong inductive bias (Locality, Translation Invariance).
+* **ViT:** `vit_tiny_patch16_224` (Dosovitskiy et al.)
+    * *Characteristics:* Long-range dependency modeling via Self-Attention, low inductive bias.
 
-* **Dataset:** CIFAR-10
-* **Data Scales:** `[10%, 25%, 50%, 100%]` of Training Data
-* **Epochs:** 50 (fixed for all experiments)
-* **Batch Size:** 128 (Unified for stability)
-* **Optimizer:** AdamW (`lr=0.001`, `weight_decay=1e-4`)
-* **Seed:** Fixed to `42` for reproducibility
+### 2.2. Controlled Variables (Hyperparameters)
+To ensure a fair comparison, all environmental variables were strictly controlled:
+* **Dataset:** CIFAR-10 (Resized to 224x224 for ViT compatibility)
+* **Data Scales:** `[10%, 25%, 50%, 100%]` of the Training Set
+* **Epochs:** 50 (Fixed)
+* **Batch Size:** 128
+* **Optimizer:** AdamW (`lr=1e-3`, `weight_decay=1e-4`)
+* **Seed:** `42` (For reproducibility)
 
-### Hardware-Specific Optimization
-* **CNN (Mac M3):** Optimized for **MPS (Metal Performance Shaders)** with `num_workers=0` to eliminate multiprocessing overhead on MacOS.
-* **ViT (Colab TPU):** Optimized for **TPU v5e-1 (Tensor Processing Unit)** using `torch_xla` and `MpDeviceLoader` for massive parallel processing.
+### 2.3. Computing Environment (Hybrid Strategy)
+| Architecture | Hardware | Framework | Rationale |
+| :--- | :--- | :--- | :--- |
+| **CNN** | **MacBook Air M3** (16GB) | PyTorch (MPS) | High efficiency for sequential operations; suitable for ResNet. |
+| **ViT** | **Google Colab TPU** (v2/v5e) | PyTorch XLA | Massive parallel processing required for Multi-Head Attention. |
 
-## 3. Tech Stack
-* **Framework:** PyTorch
-* **Library:** `timm` (PyTorch Image Models), `torchvision`, `torch_xla`
-* **Environments (Hybrid Strategy):**
-    *  **Local:** MacBook Air M3 16GB (Apple Silicon MPS) - *Used for CNN*
-    *  **Cloud:** Google Colab (TPU v5e-1) - *Used for ViT*
+---
 
-## 4. Usage
-### Train CNN (Local Mac M3)
+## 3. Results & Analysis 📊
+
+### 3.1. Overall Performance Summary
+The table below summarizes the Test Accuracy changes as the data scale increases.
+
+| Data Ratio (Images) | CNN (ResNet-18) | ViT (Tiny) | **Performance Gap** | Improvement (ViT) |
+| :---: | :---: | :---: | :---: | :---: |
+| **10%** (5k) | 63.40% | 45.01% | **+18.39%** | - |
+| **25%** (12.5k) | 72.01% | 55.30% | +16.71% | +10.29% |
+| **50%** (25k) | 79.13% | 65.24% | +13.89% | +9.94% |
+| **100%** (50k) | **82.23%** | **73.33%** | **+8.90%** | +8.09% |
+
+### 3.2. Key Findings
+
+#### 📉 1. The Gap is Closing (Scalability of ViT)
+* At **10% data**, the gap was substantial (**18.39%**), confirming that ViT struggles to learn visual representations without sufficient examples.
+* As data increased to **100%**, the gap narrowed significantly to **8.90%**.
+* **Insight:** ViT exhibits a steeper learning curve than CNN. This suggests that with even more data (e.g., ImageNet), ViT has the potential to outperform CNNs, adhering to the *scaling laws* of Transformers.
+
+#### 🧠 2. Inductive Bias vs. Data Scale
+* **CNN** showed stable performance even with 10% data (63.4%), benefiting from its architectural priors (Convolution).
+* **ViT** required at least 50% data (25k images) to reach a respectable accuracy (>60%), proving its "data-hungry" nature.
+
+#### ⚠️ 3. Overfitting in ViT
+* At 100% data, ViT achieved a **Training Accuracy of 95.81%** but a **Test Accuracy of 73.33%**.
+* **Analysis:** The model has sufficient capacity to memorize the training data but fails to generalize perfectly. This indicates the need for strong regularization techniques (e.g., Mixup, CutMix, Augmentation) when training ViTs on small datasets like CIFAR-10.
+
+---
+
+## 4. Conclusion & Future Work
+
+### Conclusion
+This study empirically validates that **CNNs are more data-efficient** and suitable for scenarios with limited data resources. Conversely, **ViTs show higher scalability** but require significantly more data or strong regularization to overcome the lack of inductive bias. For practical applications with <50k images, ResNet remains the superior choice unless pre-training is applied.
+
+### Future Work
+1.  **Strong Augmentation:** Apply AutoAugment, Mixup, or CutMix to mitigate ViT's overfitting.
+2.  **Edge-Cloud Collaboration:** Develop an adaptive inference system that runs lightweight CNNs on edge devices and offloads difficult samples to a cloud-based ViT (e.g., `ViT-Large`), utilizing the hybrid environment established in this project.
+3.  **Pre-training:** Compare results when initializing ViT with weights pre-trained on ImageNet-1k.
+
+---
+
+## 5. Directory Structure
+
 ```bash
-python train_cnn.py --epochs 50 --batch_size 128 --ratio 0.1
-```
-
-## 5. Experiment Results 📊
-
-We observed the performance changes as the data scale increased from **10% to 25%**.
-
-### 5.1. Data Scale: 10% (5,000 Images)
-* **Goal:** Test performance in an extremely low-data regime.
-
-| Model | Platform | Test Accuracy | Training Time |
-| :--- | :--- | :--- | :--- |
-| **CNN (ResNet-18)** | Mac M3 (MPS) | **63.40%** | ~3.5 min |
-| **ViT (Tiny-Patch16)** | Colab (TPU v5e-1) | 45.01% | ~11.4 min |
-
-> **Analysis:** > CNN outperformed ViT by **+18.39%**. ViT failed to generalize, showing severe overfitting (Train 75% vs Test 45%).
-
-<br>
-
-### 5.2. Data Scale: 25% (12,500 Images)
-* **Goal:** Observe if ViT starts to catch up with 2.5x more data.
-
-| Model | Platform | Test Accuracy | Improvement (vs 10%) |
-| :--- | :--- | :--- | :--- |
-| **CNN (ResNet-18)** | Mac M3 (MPS) | **72.01%** | +8.61% |
-| **ViT (Tiny-Patch16)** | Colab (TPU v5e-1) | 55.30% | +10.29% |
-
-> **Analysis:** > Both models improved significantly, but the **performance gap remains large (~16.7%)**. 
-> ViT's accuracy jumped by over 10%, yet it still lags behind CNN, confirming its high data dependency.
->
-> <br>
-
-### 5.3. Data Scale: 50% (25,000 Images)
-* **Goal:** Verify if the gap narrows as ViT gets more data.
-
-| Model | Platform | Test Accuracy | Improvement (vs 25%) |
-| :--- | :--- | :--- | :--- |
-| **CNN (ResNet-18)** | Mac M3 (MPS) | **79.13%** | +7.12% |
-| **ViT (Tiny-Patch16)** | Colab (TPU v5e-1) | 65.24% | +9.94% |
-
-> **Analysis:** > **The gap is closing!** (16.7% → 13.9%). 
-> ViT finally surpassed 60% accuracy, showing a steeper learning curve than CNN. 
-> However, severe overfitting persists (Train 94% vs Test 65%), indicating that 25k images are still insufficient for ViT to fully generalize without strong regularization.
+CNN-vs-ViT/
+├── data/                   # CIFAR-10 Dataset
+├── models/                 # Model Definitions
+├── train_cnn.py            # Optimized for Mac M3 (MPS)
+├── train_vit_tpu.py        # Optimized for Colab TPU (XLA)
+├── utils.py                # Data Loaders & Plotting Tools
+├── README.md               # Project Report
+└── results/                # Logs & Saved Plots
