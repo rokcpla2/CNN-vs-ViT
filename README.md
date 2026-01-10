@@ -58,10 +58,10 @@ We compared two representative models with similar parameter scales:
 
 ```bash
 CNN-vs-ViT/
-├── train_cnn.py            # Script for Mac M3 (MPS)
-├── train_vit.py            # Script for Cloud TPU (XLA)
+├── README.md               # Project Report 
 ├── requirements.txt        # Dependencies
-└── README.md               # Project Report
+├── train_cnn.py            # Script for Mac M3 (MPS)
+└── train_vit.py            # Script for Cloud TPU (XLA)
 ```
 
 ---
