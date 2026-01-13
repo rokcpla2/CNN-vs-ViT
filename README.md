@@ -44,25 +44,22 @@
 ### 2.2 모델
 CNN: ResNet-18
 - CIFAR-10에 맞게 3×3 Conv로 수정
+
 ViT: ViT-Tiny-Patch16
 224×224 Resize 후 Patch-Embedding
 Self-Attention 기반 구조
 
-#### Vision Transformer
-- **Model:** vit_tiny_patch16_224 (Dosovitskiy et al.)
-- **Characteristics:** Long-range dependency modeling via Self-Attention, low inductive bias
-- **Preprocessing:** Resize images to 224×224
 
-### 2.2 Computing Environment (Hybrid Strategy)
+### 2.3 컴퓨팅 환경
 
 | Architecture | Hardware | Framework | Script |
 |:-------------|:---------|:----------|:-------|
-| **CNN** | **MacBook Air M3** (16GB) | PyTorch (MPS) | `train_cnn.py` |
-| **ViT** | **Google Colab TPU** (v2) | PyTorch XLA | `train_vit.py` |
+| CNN | MacBook Air M3 (16GB) | PyTorch | `train_cnn.py` |
+| ViT | Google Colab TPU | PyTorch XLA | `train_vit.py` |
 
 ---
 
-## 3. Directory Structure
+## 3. 코드 구조
 
 ```bash
 CNN-vs-ViT/
@@ -74,17 +71,16 @@ CNN-vs-ViT/
 
 ---
 
-## 4. Usage
+## 4. 실행 방법
 
-### 4.1 Installation
+### 4.1 설치
 
 ```bash
 git clone https://github.com/rokcpla2/CNN-vs-ViT.git
-cd CNN-vs-ViT
-pip install -r requirements.txt
+cd CNN-vs-ViT pip install -r requirements.txt
 ```
 
-### 4.2 Train CNN (Local Edge Device)
+### 4.2 CNN 학습 (Local Edge Device)
 
 Optimized for Apple Silicon (MPS). You can control the data ratio using the `--ratio` argument.
 
@@ -96,7 +92,7 @@ python train_cnn.py --ratio 0.1 --epochs 50
 python train_cnn.py --ratio 1.0 --epochs 50
 ```
 
-### 4.3 Train ViT (Cloud TPU)
+### 4.3 ViT 학습 (Cloud TPU)
 
 Optimized for TPU environments (e.g., Google Colab).
 
@@ -107,45 +103,53 @@ python train_vit.py --ratio 0.25 --epochs 50
 
 ---
 
-## 5. Experimental Results 📊
+## 5. 실험 결과 📊
 
-### 5.1 Performance Comparison Graph
+### 5.1 Accuracy 비교 그래프
 
 <p align="center">
   <img src="https://github.com/user-attachments/assets/18137eea-70eb-4908-92b0-5c636110ddbb" width="845" height="573" alt="final_result_dark">
 </p>
 
-The graph below illustrates the Test Accuracy trends as the dataset size increases.
+### 수치 비교
 
-### 5.2 Numerical Analysis
-
-| Data Ratio | CNN (ResNet-18) | ViT (Tiny) | Performance Gap |
+| Data Ratio | CNN | ViT | Performance Gap |
 |:-----------|:----------------|:-----------|:----------------|
 | 10% (5k) | 63.40% | 45.01% | +18.39% |
 | 25% (12.5k) | 72.01% | 55.30% | +16.71% |
 | 50% (25k) | 79.13% | 65.24% | +13.89% |
 | 100% (50k) | 82.23% | 73.33% | +8.90% |
 
-### 5.3 Key Findings
+## 6. 분석 (Analysis)
 
-#### Inductive Bias Matters in Low Data
-CNN consistently outperformed ViT, especially when data was scarce (10%), thanks to its architectural priors.
+### 6.1 CNN은 왜 데이터가 적어도 강한가?
+- 지역적 패턴을 우선적으로 보는 inductive bias
+- 필터가 전체 이미지에 공유됨
+- 학습해야 할 파라미터 공간이 상대적으로 좁음
 
-#### ViT is "Data Hungry"
-ViT showed a steeper learning curve. The performance gap closed from 18.4% (at 10% data) to 8.9% (at 100% data).
+### 6.2 ViT는 왜 많은 데이터가 필요한가?
+- 패치 간 관계를 전부 학습해야 함
+- 이미지 구조에 대한 사전 가정이 없음
+- 작은 데이터에서는 쉽게 overfitting 발생
 
-#### Overfitting
-At 100% data, ViT achieved 95.8% Training Acc but only 73.3% Test Acc, indicating a need for stronger regularization (e.g., Mixup, CutMix) or more data.
+### 6.3 성능 격차가 줄어드는 지점
+- 데이터가 많아질수록 ViT의 장점(전역적 특징 학습)이 발휘됨
+- 100% 데이터 구간에서는 Gap이 약 8.9%까지 감소
 
 ---
 
-## 6. Conclusion
+## 6. 결론(Conclusion)
 
-This study empirically validates that CNNs are more data-efficient and suitable for edge-based scenarios with limited resources. Conversely, ViTs show higher scalability but require significantly more data to overcome the lack of inductive bias.
+- 작은 데이터에서는 CNN이 압도적으로 유리
+- ViT는 대규모 데이터에서 점차 CNN과 격차를 좁힘
+- 모델 선택은 데이터 조건에 따라 달라져야 함
 
-### Future Work
+### 향후 연구 방향 (Future Work)
 
-We plan to develop an **Adaptive Edge-Cloud Inference System** that dynamically offloads difficult samples to a cloud-based ViT while processing easy samples on a local CNN, leveraging the hybrid environment established in this project.
+- Mixup/CutMix 기반 ViT regularization 실험
+- augmentation 영향 비교
+- patch size 변화(ablation study)
+- CNN-ViT 협력 구조(Edge-Cloud Hybrid Inference) 연구
 
 ---
 
