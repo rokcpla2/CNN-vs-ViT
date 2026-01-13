@@ -40,11 +40,13 @@
 ### 2.1 데이터셋
 - CIFAR-10 (32×32 RGB, 10 classes)
 - 사용 비율: 10%, 25%, 50%, 100%
-  
-#### CNN
-- **Model:** ResNet-18 (He et al.)
-- **Characteristics:** Strong inductive bias (Locality, Translation Invariance)
-- **Optimization:** Modified first conv layer (kernel 3×3) for CIFAR-10 (32×32)
+
+### 2.2 모델
+CNN: ResNet-18
+- CIFAR-10에 맞게 3×3 Conv로 수정
+ViT: ViT-Tiny-Patch16
+224×224 Resize 후 Patch-Embedding
+Self-Attention 기반 구조
 
 #### Vision Transformer
 - **Model:** vit_tiny_patch16_224 (Dosovitskiy et al.)
