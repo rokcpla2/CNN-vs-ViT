@@ -9,9 +9,10 @@
 
 ## 📝 Abstract
 
-This study investigates the impact of **Data Scale** on the performance of **Convolutional Neural Networks (CNNs)** and **Vision Transformers (ViTs)**. We empirically verify the hypothesis that ViTs lack the inductive bias inherent in CNNs, making them more "data-hungry" and difficult to generalize in low-data regimes.
+이 연구는 데이터 규모(Data Scale)가 CNN(ResNet-18)과 Vision Transformer(ViT-Tiny)의 모델 성능에 어떤 영향을 미치는지 비교·분석하기 위해 수행되었습니다.
 
-By scaling the CIFAR-10 training dataset from **10% to 100%**, we analyze the convergence speed, generalization capability, and overfitting tendencies of both architectures. Additionally, this project demonstrates a **Hybrid Computing Strategy**, utilizing **Apple Silicon (MPS)** for efficient edge-based CNN training and **Cloud TPU (XLA)** for high-throughput ViT training.
+특히, CNN이 가진 **inductive bias(국소성·평행이동 불변성)**과
+ViT의 **데이터 의존성(data-hungry 특성)**이 실제 실험에서 어떤 형태로 나타나는지 검증하는 것을 목표로 합니다.
 
 ---
 
