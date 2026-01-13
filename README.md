@@ -35,12 +35,12 @@
 
 ---
 
-## 2. Experimental Methodology
+## 2. 실험 환경
 
-### 2.1 Model Architectures
-
-We compared two representative models with similar parameter scales:
-
+### 2.1 데이터셋
+- CIFAR-10 (32×32 RGB, 10 classes)
+- 사용 비율: 10%, 25%, 50%, 100%
+  
 #### CNN
 - **Model:** ResNet-18 (He et al.)
 - **Characteristics:** Strong inductive bias (Locality, Translation Invariance)
