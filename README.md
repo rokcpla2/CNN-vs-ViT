@@ -1,4 +1,5 @@
-# Comparative Analysis of Inductive Bias and Data Efficiency: CNN vs. Vision Transformer
+# CNN vs ViT: 데이터 규모에 따른 성능 비교 연구
+Data-Scale Sensitivity Analysis of CNN (ResNet-18) and ViT (Tiny-Patch16)
 
 [![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=flat-square&logo=pytorch&logoColor=white)](https://pytorch.org/)
 [![Colab](https://img.shields.io/badge/Google_Colab-F9AB00?style=flat-square&logo=googlecolab&logoColor=white)](https://colab.research.google.com/)
