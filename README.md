@@ -7,26 +7,30 @@
 
 ---
 
-## 📝 Abstract
+## 📝 연구 개요
 
 이 연구는 데이터 규모(Data Scale)가 CNN(ResNet-18)과 Vision Transformer(ViT-Tiny)의 모델 성능에 어떤 영향을 미치는지 비교·분석하기 위해 수행되었습니다.
 
-특히, CNN이 가진 **inductive bias(국소성·평행이동 불변성)**과
-ViT의 **데이터 의존성(data-hungry 특성)**이 실제 실험에서 어떤 형태로 나타나는지 검증하는 것을 목표로 합니다.
+특히, CNN이 가진 inductive bias와 ViT의 데이터 의존성이 실제 실험에서 어떤 형태로 나타나는지 검증하는 것을 목표로 합니다.
 
 ---
 
-## 1. Introduction
+## 1. 연구 배경
 
-### 1.1 Motivation
+### 1.1 CNN 
+- Convolution(필터)을 사용해 지역적 특징을 탐색
+- 이미지 구조에 특화된 inductive bias 내장
+- 적은 데이터에서도 안정적으로 성능 확보
+  
+### 1.2 Vision Transformer
+- 이미지를 패치(patch) 단위로 분할해 토큰처럼 처리
+- Self-Attention으로 전역 관계를 학습
+- 이미지 구조에 대한 선천적 가정이 거의 없음 → 많은 데이터 필요
 
-In the field of Computer Vision, the paradigm is shifting from CNNs to Transformers. However, deploying ViTs in real-world scenarios typically requires massive datasets (e.g., JFT-300M, ImageNet). This project aims to quantify the **performance gap** between a standard CNN (ResNet) and a lightweight ViT under restricted data environments, providing insights for efficient model selection in data-scarce applications.
-
-### 1.2 Key Contributions
-
-- **Data Sensitivity Analysis:** Quantitative comparison of model performance across four data scales (10%, 25%, 50%, 100%).
-- **Hybrid Training Pipeline:** Heterogeneous computing environment optimizing resource allocation (Edge Device vs. Cloud Accelerator).
-- **Verification of Inductive Bias:** Empirical evidence supporting the necessity of locality and translation invariance in low-data regimes.
+### 1.3 연구 질문
+- 데이터 비율(10%, 25%, 50%, 100%) 변화가 두 모델의 성능에 어떤 차이를 만드는가?
+- 작은 데이터 상황에서 CNN이 더 강력한 이유는 무엇인가?
+- ViT는 어느 시점에서 CNN과 성능 격차가 줄어드는가?
 
 ---
 
